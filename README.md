@@ -36,18 +36,93 @@ List of attributes captured for each property*:
 
 
 *If a property does not have a value for one of these attributes a None will be recorded, in keeping with Python convention.
-## Environment Variables and installation
+
+## Environment Variables and Installation
 
 To run this project, you will need to add the following libraries to your Python3 base:
 - bs4
 - requests
 
+
 For further installation details see the accompanying file: **requirements.txt**
 
-*3 seperate python scripts are enclosed.
+*3 separate python scripts are enclosed.
 They all need to be callable for the program to run.*
 This was done to keep the functions which are invlolved in different parts of the program seperate
 and the code more readable.
+
+# Running the Program Through the Command Line
+
+Through the implementation of the argparse module, the program (Zillow.py) can be run using the following syntax:
+
+	usage: Zillow.py [-h] [-A] [-u] [-p] [-r] [-b] [-a] [-l] -s SEARCH_LOCS
+                 	[SEARCH_LOCS ...]
+
+-h: help tag will print the above usage information for the user's convenience
+
+-s: **REQUIRED** enables the input of one or more locations in which to search for properties and scrape information
+
+-A: will store ALL available property features following the collection of property data from Zillow.com.
+** This tag is mutually exlusive from each of the other following tags
+
+The following tags enable the user to select specfic property features that shall be scraped and stored in the database.:
+-u: url
+-p: price
+-r: bedrooms
+-b: bathrooms
+-a: address
+-l: locale/region
+The above tags can be used in combination with one another (e.g. -ua --> scrape the url and address of each property)
+
+
+## Database Set-Up and Design
+A SQL database, zillow_db, and schema is created, if it does not already exist.
+
+#set-up instructions:
+In the oonfig.py module, under the section SQL Configs, complete the 3 parameters, using the values of the local server:
+Example:
+HOST ='localhost'
+USER ='root'
+PASSWORD ='password'
+
+The database has two tables, scrapes and properties, as documented below.
+
+**scrapes table**
+This is a table recording each time and location of the website scrapes.
+
+|COLUMN|  Datatype| Key |
+|scrape_id |INT | PRIMARY KEY |
+|scrape_location| VARCHAR(250) |
+|date_time | DATETIME |
+ 	
+**properties**
+For each property in a location scrape, an entry is made in this column.
+If the property is already in the database, it will not be duplicated.
+
+property_id | INT | PRIMARY KEY |
+scrape_id | INT  | FOREIGN KEY |
+Property_url | VARCHAR(250) |
+Address  | VARCHAR(250) |
+Price | FLOAT |
+Bedrooms  | INT |
+Bathrooms | FLOAT |
+Full_bathrooms | INT |
+Basement | VARCHAR(250) |
+Flooring  | VARCHAR(250) |
+Appliances_included  | VARCHAR(250) |
+Total_interior_livable_area | VARCHAR(250) |
+View_description | VARCHAR(250) |
+Parking_features  | VARCHAR(250) |
+Home_type | VARCHAR(250) |
+New_construction  | VARCHAR(250) |
+Year_built  | VARCHAR(250) |
+Community_features  | VARCHAR(250) |
+Region | VARCHAR(250) |
+Has_HOA | VARCHAR(250) |
+
+# ERD
+![ERD image](erd.png)
+
 
 ## Authors
 
@@ -57,8 +132,11 @@ and the code more readable.
 
 ## Project Status
 
-Stage One -     Webscraper      : Complete
-Next Stage -    Database Design : Ongoing
+Stage 1  -   Webscraper                	: Complete
+Stage 2  -   Database Design          	: Complete
+Stage 3  -   Command Line Operability  : Complete
+Stage 4  -   Data Storage              		: Complete
+
 
 ## Usage Example
 
@@ -66,3 +144,4 @@ You may input a list of urls from searches of different regions in your configur
 
 We have used these two searches, Manhattan and Miami, respectively, which can be input as parameters:
 https://www.zillow.com/homes/Manhattan,-New-York,-NY_rb/ https://www.zillow.com/homes/Miami,-FL_rb/
+
