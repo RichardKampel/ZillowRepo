@@ -31,7 +31,7 @@ def entry_exists(property_url):
         #TypeError: 'NoneType' object is not subscriptable
     except TypeError:
         return False
-    return property_id.isdigit()
+    return property_id
 
 def add_property_to_properties_tbl(property, scrape_id):
     CURSOR.execute("USE zillow_db;")

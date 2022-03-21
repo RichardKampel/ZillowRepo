@@ -94,7 +94,6 @@ class ZillowScraper:
         with requests.Session() as session:
             r = session.get(zsearch_obj.url, headers=SEARCH_REQ_HEADERS)
         soup = BeautifulSoup(r.content, 'html.parser')
-        print(soup)
         # Set search title (location of search)
         if soup.select('h1.search-title')[0].text.strip() != 'Real Estate & Homes For Sale':
             zsearch_obj.set_search_title(soup.select('h1.search-title')[0].text.strip())

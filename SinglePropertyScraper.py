@@ -28,6 +28,7 @@ def clean_dict(property_dict, desired_features):
         except KeyError:
             cleaned_dict[key] = None
     return cleaned_dict
+
 def get_price(soup):
     """
     Extracts the property's price (as an int) from the soup object
