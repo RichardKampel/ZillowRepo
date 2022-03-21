@@ -77,20 +77,13 @@ The above tags can be used in combination with one another (e.g. -ua --> scrape 
 
 ## Database Set-Up and Design
 A SQL database, zillow_db, and schema is created, if it does not already exist.
-
-#set-up instructions:
-In the oonfig.py module, under the section SQL Configs, complete the 3 parameters, using the values of the local server:
-Example:
-HOST ='localhost'
-USER ='root'
-PASSWORD ='password'
-
 The database has two tables, scrapes and properties, as documented below.
 
 **scrapes table**
 This is a table recording each time and location of the website scrapes.
 
-|COLUMN|  Datatype| Key |
+|COLUMN |  Datatype | Key |
+--- | --- | ---
 |scrape_id |INT | PRIMARY KEY |
 |scrape_location| VARCHAR(250) |
 |date_time | DATETIME |
@@ -99,6 +92,8 @@ This is a table recording each time and location of the website scrapes.
 For each property in a location scrape, an entry is made in this column.
 If the property is already in the database, it will not be duplicated.
 
+|Column Name |  Datatype | Key |
+--- | --- | ---
 property_id | INT | PRIMARY KEY |
 scrape_id | INT  | FOREIGN KEY |
 Property_url | VARCHAR(250) |
@@ -120,8 +115,7 @@ Community_features  | VARCHAR(250) |
 Region | VARCHAR(250) |
 Has_HOA | VARCHAR(250) |
 
-# ERD
-![ERD image](erd.png)
+
 
 
 ## Authors
