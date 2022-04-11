@@ -1,25 +1,21 @@
 #!/usr/bin/env python3
 
-import requests
-import sys
 import argparse
-from bs4 import BeautifulSoup
 import re
 from SinglePropertyScraper import *
-from config import *
 from schema_SQL import create_db_schema
 from SQL_inserts import *
 
 
-def print_dict_nicely(dict, row_title_key):
+def print_dict_nicely(dict_input, row_title_key):
     """
     Prints dictionary nicely
-    :param dict: dict to print
+    :param dict_input: dict to print
     :param row_title_key: key in dict to be used as the title of each row upon printing
     """
     print('')
-    for key in dict:
-        print(f'{dict[key][row_title_key].ljust(60)}: {dict[key]}')
+    for key in dict_input:
+        print(f'{dict_input[key][row_title_key].ljust(60)}: {dict_input[key]}')
     print('\n')
 
 
@@ -62,6 +58,7 @@ class ZillowSearch:
         for property_url in self.property_urls_list:
             self.properties_info_dict[property_url] = scrape_property(property_url, self.desired_features)
 
+
     def __str__(self):
         """
         When zsearch object converted to string, dictionary of property information (for given search) printed neatly
@@ -102,7 +99,9 @@ class ZillowScraper:
         for elem in soup('script'):
             if '_zpid/' in str(elem.contents):
                 zsearch_obj.property_urls_list += [string for string in re.split(r'"', str(elem.contents[0])) if
-                                                  '_zpid/' in string and string not in zsearch_obj.property_urls_list]
+                                                   '_zpid/' in string and string not in zsearch_obj.property_urls_list]
+                # print("zsearch_obj.property_urls_list: ", zsearch_obj.property_urls_list)
+                print("len zsearch_obj.property_urls_list: ", len(zsearch_obj.property_urls_list))
         self.property_urls_dict[zsearch_obj] = zsearch_obj.property_urls_list
 
 
@@ -151,33 +150,27 @@ def main():
     search_locs, desired_features = parse_arguments()
     # Create list of search URLs for each search loc
     search_urls = ['https://www.zillow.com/homes/' + loc + '_rb/' for loc in search_locs]
+    print("search_urls: ", search_urls)
     # Initialise ZillowScraper object
     scraper = ZillowScraper()
     # Create list of Z-Search objects, one for each url provided.
     zsearch_obj_list = [ZillowSearch(url, desired_features) for url in search_urls]
     logger.info(f"{len(zsearch_obj_list)} search objects created successfully: {search_locs}")
-    print("PROPERTY INFO FOR ALL PROPERTIES:\n\n")
-    for zsearch_obj in zsearch_obj_list:
-        print(zsearch_obj)
     for i in range(len(zsearch_obj_list)):
         # Creates list of property URLs for searched location
         scraper.scrape_search_for_property_urls(zsearch_obj_list[i])
         # Creates a dictionary of property-specific information, for each of the properties in a given search result
         zsearch_obj_list[i].create_properties_info_dict()
-        # Prints all property-specific data for each property in a given search result
-    # # Print property data for all properties searched
-
-
 
     # Create SQL Database
     create_db_schema()
     for zsearch_obj in zsearch_obj_list:
         add_scrape_to_scrapes_tbl(zsearch_obj.search_title)
-        scrape_id = get_current_scrape_id()
-        for property in zsearch_obj.properties_info_dict.values():
-            print(zsearch_obj.properties_info_dict)
-            print(zsearch_obj.properties_info_dict.values())
-            add_property_to_properties_tbl(property, scrape_id)
+        for prop in zsearch_obj.properties_info_dict.values():
+            add_property_to_properties_tbl(prop)
+            logger.info(f"Property added to table: {zsearch_obj.properties_info_dict}")
+            print("property added to database")
+
 
 if __name__ == "__main__":
     main()

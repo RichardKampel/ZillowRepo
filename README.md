@@ -1,18 +1,18 @@
 
-## Webscrape of Zillow.com in Python.
+# Webscrape of Zillow.com in Python.
 
-input requirements: Initial search urls for areas of interest.
+Input requirements: Initial search urls for areas of interest.
 Output: a Dictionary of the data of each of the properties in the regions provided.
 Project coded in: Python3, with the following libraries: requests, bs4.
 
-# Goal
+## Goal
 Given only a list urls from searches by area: scrape through the properties listed retrieve and store the most relevent data on each.
 
 The code enclosed achieves the desired result by performing the following broad steps:
 1) Enter Zillow.com at the inputted urls, which should be results of searches of areas of interest
 2) scrape through these pages for the urls of the properties listed on that search
 3) go into each of these properties and extract the most important variables of each property, listed below.
-4) the data will be stored in a Dictionary form for the time being, until being transfered to a database at a later date.
+4) the data will be stored in an SQL database
 
 List of attributes captured for each property*:
 - Property url
@@ -34,8 +34,11 @@ List of attributes captured for each property*:
 - Region
 - Has HOA
 
-
 *If a property does not have a value for one of these attributes a None will be recorded, in keeping with Python convention.
+
+Additionally, the following information will be captured about each property from the GISGRAPHY API  (https://services.gisgraphy.com/static/leaflet/index.html)
+- Latitude
+- Longitude
 
 ## Environment Variables and Installation
 
@@ -51,7 +54,7 @@ They all need to be callable for the program to run.*
 This was done to keep the functions which are invlolved in different parts of the program seperate
 and the code more readable.
 
-# Running the Program Through the Command Line
+## Running the Program Through the Command Line
 
 Through the implementation of the argparse module, the program (Zillow.py) can be run using the following syntax:
 
@@ -114,6 +117,7 @@ Year_built  | VARCHAR(250) |
 Community_features  | VARCHAR(250) |
 Region | VARCHAR(250) |
 Has_HOA | VARCHAR(250) |
+
 
 
 
