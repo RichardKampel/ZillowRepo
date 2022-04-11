@@ -24,14 +24,11 @@ def get_price(soup):
     price_wrapped = soup.find_all(class_="Text-c11n-8-62-5__sc-aiai24-0 hdp__sc-b5iact-0 frfoXM fAzOKk")
     if len(price_wrapped) > 0:
         price_wrap = price_wrapped[0]
-        print("price class 1")
     else:
         price_wrapped = soup.find_all(class_="Text-c11n-8-62-5__sc-aiai24-0 dpf__sc-1me8eh6-0 frfoXM fzJCbY")
         if len(price_wrapped) > 0:
             price_wrap = price_wrapped[0]
-            print("price class 2")
         else:
-            print("could not find price")
             return None
     price = price_wrap.get_text().split('from ')[-1]
     return int(price.replace(",", "").replace("$", ""))
