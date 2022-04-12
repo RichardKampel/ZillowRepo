@@ -1,9 +1,9 @@
 
 # Webscrape of Zillow.com in Python.
 
-Input requirements: Initial search urls for areas of interest.
-Output: a Dictionary of the data of each of the properties in the regions provided.
-Project coded in: Python3, with the following libraries: requests, bs4.
+Input requirements: areas from which property information will be collected and stored.
+Output: a (SQL) database containing the data of each of the properties listed on the first page of the Zillow search results for the provided areas.
+Project coded in: Python3, with libraries requests, bs4, and more (complete list can be found in the enclosed requirements.txt file)
 
 ## Goal
 Given only a list of areas (i.e. Miami,-FL), scrape through the properties listed in the Zillow search results for that area retrieve and store the most relevent data for each property in the first page of the results.
