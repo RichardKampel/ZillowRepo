@@ -41,13 +41,15 @@ lng FLOAT)
 
 def create_db_schema():
     connection = pymysql.connect(host=HOST,
-                                 user=USER,
-                                 password=PASSWORD,
-                                 cursorclass=pymysql.cursors.DictCursor)
+                             user=USER,
+                             password=PASSWORD,
+                             database=DATABASE,
+                             bind_address=IP_ADDRESS
+                             cursorclass=pymysql.cursors.DictCursor)
 
     with connection.cursor() as cursor:
-        cursor.execute(create_db_sttmnt)
-        cursor.execute(use_db_sttment)
+        # cursor.execute(create_db_sttmnt)
+        # cursor.execute(use_db_sttment)
 
         cursor.execute(create_scrapes_table_sttmnt)
         cursor.execute(create_properties_table_sttmnt)
