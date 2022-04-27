@@ -4,7 +4,7 @@ from Gis_API import get_latlng
 
 
 def add_scrape_to_scrapes_tbl(search_title):
-    CURSOR.execute("USE zillow_db;")
+    # CURSOR.execute("USE zillow_db;")
     scrapes_insert_sql = "INSERT INTO scrapes (scrape_location, date_time) VALUES (%s, %s);"
     today_str = datetime.now().strftime('%Y-%m-%d, %H:%M:%S')
     CURSOR.execute(scrapes_insert_sql, (search_title, today_str))
@@ -12,7 +12,7 @@ def add_scrape_to_scrapes_tbl(search_title):
 
 
 def get_current_scrape_id():
-    CURSOR.execute("USE zillow_db;")
+    # CURSOR.execute("USE zillow_db;")
     max_sql = "SELECT max(scrape_id) FROM scrapes;"
     CURSOR.execute(max_sql)
     max_scrape_id = CURSOR.fetchone()['max(scrape_id)']
@@ -20,7 +20,7 @@ def get_current_scrape_id():
 
 
 def get_current_property_id():
-    CURSOR.execute("USE zillow_db;")
+    # CURSOR.execute("USE zillow_db;")
     current_property_id_sql = "SELECT max(property_id) FROM properties;"
     CURSOR.execute(current_property_id_sql)
     curr_property_id = CURSOR.fetchone()['max(property_id)']
@@ -28,7 +28,7 @@ def get_current_property_id():
 
 
 def entry_exists(property_url):
-    CURSOR.execute("USE zillow_db;")
+    # CURSOR.execute("USE zillow_db;")
     p_url_search_SQL = "SELECT property_id FROM properties WHERE property_url = %s"
     CURSOR.execute(p_url_search_SQL, property_url)
     try:
@@ -39,7 +39,7 @@ def entry_exists(property_url):
 
 
 def add_property_to_properties_tbl(property):
-    CURSOR.execute("USE zillow_db;")
+    # CURSOR.execute("USE zillow_db;")
     if entry_exists(property['Property url']):
         pass
     else:
