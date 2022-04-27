@@ -69,7 +69,7 @@ connection = pymysql.connect(host=HOST,
                              user=USER,
                              password=PASSWORD,
                              database=DATABASE,
-                             bind_address=IP_ADDRESS
+                             bind_address=IP_ADDRESS,
                              cursorclass=pymysql.cursors.DictCursor)
 
 CURSOR = connection.cursor()
