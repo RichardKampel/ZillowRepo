@@ -59,17 +59,16 @@ PROPERTY_REQ_HEADERS = {
 }
 
 # SQL configs
-HOST = 'localhost'
+HOST = 'data-mining-db1.cttpnp4olbpx.us-west-1.rds.amazonaws.com'
 USER = 'noam_richard'
 PASSWORD = 'noam_richard'
 IP_ADDRESS = 'data-mining-db1.cttpnp4olbpx.us-west-1.rds.amazonaws.com'
 DATABASE = 'noam_richard'
 
-connection = pymysql.connect(host=HOST,
+connection = pymysql.connect(host=IP_ADDRESS,
                              user=USER,
                              password=PASSWORD,
                              database=DATABASE,
-                             bind_address=IP_ADDRESS,
                              cursorclass=pymysql.cursors.DictCursor)
 
 CURSOR = connection.cursor()
