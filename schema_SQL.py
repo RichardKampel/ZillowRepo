@@ -1,67 +1,56 @@
-from datetime import datetime
 from config import *
-from Gis_API import get_latlng
+
+create_db_sttmnt = "CREATE DATABASE IF NOT EXISTS zillow_db;"
+use_db_sttment = "USE zillow_db;"
+
+create_scrapes_table_sttmnt = "CREATE TABLE IF NOT EXISTS scrapes (\
+                                scrape_id INT AUTO_INCREMENT PRIMARY KEY,\
+                                scrape_location VARCHAR(250),\
+                                date_time DATETIME\
+                              );"
+
+create_properties_table_sttmnt = """CREATE TABLE IF NOT EXISTS properties (
+property_id		INT AUTO_INCREMENT PRIMARY KEY,
+scrape_id		INT,
+Property_url	VARCHAR(250),
+Address 		VARCHAR(250),
+Price 			FLOAT,
+Bedrooms 		INT,
+Bathrooms 		FLOAT,
+Full_bathrooms 	INT,
+Basement 		VARCHAR(250),
+Flooring 		VARCHAR(250),
+Appliances_included VARCHAR(500),
+Total_interior_livable_area VARCHAR(250),
+View_description VARCHAR(250),
+Parking_features VARCHAR(250),
+Home_type 		VARCHAR(250),
+New_construction VARCHAR(250),
+Year_built 		VARCHAR(250),
+Community_features VARCHAR(250),
+Region 			VARCHAR(250),
+Has_HOA 		VARCHAR(250)
+);"""
+
+create_lat_lng_table_statement = """CREATE TABLE IF NOT EXISTS lat_lng (
+property_id INT PRIMARY KEY,
+lat FLOAT,
+lng FLOAT)
+;"""
 
 
-def add_scrape_to_scrapes_tbl(search_title):
-    # CURSOR.execute("USE zillow_db;")
-    scrapes_insert_sql = "INSERT INTO scrapes (scrape_location, date_time) VALUES (%s, %s);"
-    today_str = datetime.now().strftime('%Y-%m-%d, %H:%M:%S')
-    CURSOR.execute(scrapes_insert_sql, (search_title, today_str))
-    connection.commit()
+def create_db_schema():
+    connection = pymysql.connect(host=IP_ADDRESS,
+                                 user=USER,
+                                 password=PASSWORD,
+                                 database=DATABASE,
+                                 cursorclass=pymysql.cursors.DictCursor)
 
+    with connection.cursor() as cursor:
+        # cursor.execute(create_db_sttmnt)
+        # cursor.execute(use_db_sttment)
 
-def get_current_scrape_id():
-    # CURSOR.execute("USE zillow_db;")
-    max_sql = "SELECT max(scrape_id) FROM scrapes;"
-    CURSOR.execute(max_sql)
-    max_scrape_id = CURSOR.fetchone()['max(scrape_id)']
-    return max_scrape_id
-
-
-def get_current_property_id():
-    # CURSOR.execute("USE zillow_db;")
-    current_property_id_sql = "SELECT max(property_id) FROM properties;"
-    CURSOR.execute(current_property_id_sql)
-    curr_property_id = CURSOR.fetchone()['max(property_id)']
-    return curr_property_id
-
-
-def entry_exists(property_url):
-    # CURSOR.execute("USE zillow_db;")
-    p_url_search_SQL = "SELECT property_id FROM properties WHERE property_url = %s"
-    CURSOR.execute(p_url_search_SQL, property_url)
-    try:
-        property_id = CURSOR.fetchone()['property_id']
-    except TypeError:
-        return False
-    return property_id
-
-
-def add_property_to_properties_tbl(property):
-    # CURSOR.execute("USE zillow_db;")
-    if entry_exists(property['Property url']):
-        pass
-    else:
-        scrape_id = get_current_scrape_id()
-        properties_insert_sql = """INSERT INTO properties (scrape_id, Property_url, Address, Price, Bedrooms, Bathrooms,
-        Full_bathrooms, Basement, Flooring, Appliances_included, Total_interior_livable_area, View_description, 
-        Parking_features, Home_type, New_construction, Year_built, Community_features, Region, Has_HOA) 
-        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-        property_data = [scrape_id]
-        for key in PROPERTY_FEATURES:
-            try:
-                property_data.append(property[key])
-            except KeyError:
-                property_data.append(None)
-        CURSOR.execute(properties_insert_sql, property_data)
+        cursor.execute(create_scrapes_table_sttmnt)
+        cursor.execute(create_properties_table_sttmnt)
+        cursor.execute(create_lat_lng_table_statement)
         connection.commit()
-        add_lat_lng_to_lat_lng_tbl(get_current_property_id(), property['Address'])
-
-
-def add_lat_lng_to_lat_lng_tbl(property_id, address):
-    lat_lng_insert_sql = """INSERT INTO lat_lng (property_id, lat, lng)
-    VALUES (%s, %s, %s)"""
-    lat_lng = get_latlng(address)
-    id_lat_lng = [property_id, lat_lng[0], lat_lng[1]]
-    CURSOR.execute(lat_lng_insert_sql, id_lat_lng)
