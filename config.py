@@ -60,13 +60,16 @@ PROPERTY_REQ_HEADERS = {
 
 # SQL configs
 HOST = 'localhost'
-USER = 'root'
-PASSWORD = '12345678'
+USER = 'noam_richard'
+PASSWORD = 'noam_richard'
+IP_ADDRESS = 'data-mining-db1.cttpnp4olbpx.us-west-1.rds.amazonaws.com'
+DATABASE = 'noam_richard'
 
 connection = pymysql.connect(host=HOST,
                              user=USER,
                              password=PASSWORD,
-                             # database='zillow_db',
+                             database=DATABASE,
+                             bind_address=IP_ADDRESS
                              cursorclass=pymysql.cursors.DictCursor)
 
 CURSOR = connection.cursor()
